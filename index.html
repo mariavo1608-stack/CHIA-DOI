@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8">
+<title>Chia đội A / B</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f7f6f2;--fg:#1c1b19;--card:#fff;--bd:#dcd9d0;--a:#2563eb;--b:#e11d48;--mut:#6b675e}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#16150f;--fg:#f2f0e8;--card:#211f18;--bd:#3a372d;--a:#60a5fa;--b:#fb7185;--mut:#a29d8e}}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;display:flex;justify-content:center}
+main{width:100%;max-width:440px;padding:32px 20px;text-align:center}
+h1{font-size:24px;margin:0 0 6px}p{color:var(--mut);margin:0 0 24px}
+.names{display:flex;flex-direction:column;gap:10px}
+button{font:inherit;font-size:18px;padding:16px;border-radius:14px;border:1px solid var(--bd);background:var(--card);color:var(--fg);cursor:pointer}
+button:active{transform:scale(.98)}
+#res{margin-top:28px;display:none;padding:28px 16px;border-radius:18px;border:2px solid var(--bd);background:var(--card)}
+#res small{display:block;color:var(--mut);font-size:16px;margin-bottom:6px}
+#res b{font-size:56px;line-height:1.1}
+</style></head><body><main>
+<h1>Chia đội A / B</h1><p>Bấm vào tên của bạn để xem mình ở đội nào.</p>
+<div class="names" id="n">Đang tải...</div>
+<div id="res"><small id="who"></small><b id="team"></b></div>
+</main>
+<script>
+const n=document.getElementById("n"),res=document.getElementById("res");
+fetch("teams.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.json()).then(T=>{
+  n.textContent="";
+  Object.keys(T).forEach(name=>{
+    const b=document.createElement("button");b.textContent=name;
+    b.onclick=()=>{
+      const t=T[name];
+      document.getElementById("who").textContent=name+" thuộc";
+      const e=document.getElementById("team");e.textContent="Đội "+t;
+      e.style.color=t==="A"?"var(--a)":"var(--b)";
+      res.style.borderColor=t==="A"?"var(--a)":"var(--b)";
+      res.style.display="block";
+    };
+    n.appendChild(b);
+  });
+}).catch(()=>{n.textContent="Không tải được danh sách, thử tải lại trang.";});
+</script></body></html>
